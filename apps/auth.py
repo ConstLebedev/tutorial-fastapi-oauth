@@ -43,7 +43,7 @@ FRONTEND_URL = os.environ.get('FRONTEND_URL') or 'http://127.0.0.1:7000/token'
 @auth_app.route('/login')
 async def login(request: Request):
     redirect_uri = FRONTEND_URL  # This creates the url for our /auth endpoint
-    return await oauth.google.authorize_redirect(request, redirect_uri)
+    return await oauth.google.authorize_redirect(request, str(redirect_uri))
 
 
 @auth_app.route('/token')
@@ -52,7 +52,7 @@ async def auth(request: Request):
         access_token = await oauth.google.authorize_access_token(request)
     except OAuthError:
         raise CREDENTIALS_EXCEPTION
-    user_data = await oauth.google.parse_id_token(request, access_token)
-    if valid_email_from_db(user_data['email']):
-        return JSONResponse({'result': True, 'access_token': create_token(user_data['email'])})
+    user = await oauth.google.userinfo(token=access_token)
+    if valid_email_from_db(user['email']):
+        return JSONResponse({'result': True, 'access_token': create_token(user['email'])})
     raise CREDENTIALS_EXCEPTION

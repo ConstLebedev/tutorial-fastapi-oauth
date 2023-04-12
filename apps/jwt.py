@@ -9,7 +9,7 @@ from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
 
 # Create a fake db:
-FAKE_DB = {'guillermo.paoletti@gmail.com': {'name': 'Guillermo Paoletti'}}
+FAKE_DB = {'kilbdv@gmail.com': {'name': 'koekakoe'}}
 
 
 # Helper to read numbers using var envs
